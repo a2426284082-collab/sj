@@ -28,3 +28,27 @@ jobs:
           name: cike-debug-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
+      - name: Build signed release APK when signing secrets are configured
+        id: release
+        env:
+          SIGNING_KEY_BASE64: ${{ secrets.CIKE_SIGNING_KEY_BASE64 }}
+          SIGNING_PASSWORD: ${{ secrets.CIKE_SIGNING_PASSWORD }}
+        run: |
+          if [ -z "$SIGNING_KEY_BASE64" ] || [ -z "$SIGNING_PASSWORD" ]; then
+            echo "Release signing secrets are not configured; skipping signed release APK."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          printf '%s' "$SIGNING_KEY_BASE64" | base64 --decode > "$RUNNER_TEMP/cike-release.jks"
+          export CIKE_KEYSTORE_PATH="$RUNNER_TEMP/cike-release.jks"
+          export CIKE_KEYSTORE_PASSWORD="$SIGNING_PASSWORD"
+          export CIKE_KEY_ALIAS="cike-release"
+          export CIKE_KEY_PASSWORD="$SIGNING_PASSWORD"
+          gradle --no-daemon -p android assembleRelease
+          echo "ready=true" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        if: steps.release.outputs.ready == 'true'
+        with:
+          name: cike-release-apk
+          path: android/app/build/outputs/apk/release/app-release.apk
+          if-no-files-found: error
