@@ -1,5 +1,12 @@
 plugins { id 'com.android.application' }
 
+def releaseSigningReady = [
+    'CIKE_KEYSTORE_PATH',
+    'CIKE_KEYSTORE_PASSWORD',
+    'CIKE_KEY_ALIAS',
+    'CIKE_KEY_PASSWORD'
+].every { System.getenv(it)?.trim() }
+
 android {
     namespace 'app.cike.mobile'
     compileSdk 35
@@ -14,6 +21,24 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
+    }
+
+    signingConfigs {
+        release {
+            if (releaseSigningReady) {
+                storeFile file(System.getenv('CIKE_KEYSTORE_PATH'))
+                storePassword System.getenv('CIKE_KEYSTORE_PASSWORD')
+                keyAlias System.getenv('CIKE_KEY_ALIAS')
+                keyPassword System.getenv('CIKE_KEY_PASSWORD')
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            if (releaseSigningReady) signingConfig signingConfigs.release
+            minifyEnabled false
+        }
     }
 }
 
