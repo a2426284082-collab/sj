@@ -8,7 +8,7 @@
 
 `android/app/build/outputs/apk/debug/app-debug.apk`
 
-debug APK 可以安装到 Android 手机上测试。面向公开发布的签名 release APK 还需要配置你自己的签名密钥；不要把密钥提交到仓库。
+debug APK 可以安装到 Android 手机上测试。签名 release APK 通过 GitHub Actions 下载名为 `cike-release-apk` 的 artifact。Release 构建需要在 GitHub 仓库设置 Actions secrets：`CIKE_SIGNING_KEY_BASE64` 和 `CIKE_SIGNING_PASSWORD`。签名密钥不会提交到仓库；同一个应用后续更新必须继续使用同一把密钥，请妥善备份。
 
 ## 本机预览 PWA
 
@@ -34,4 +34,4 @@ python -m http.server 8765
 - Android 使用本地 SQLite 快照表，PWA 预览版使用 IndexedDB；首次安装与 WebView 升级的持久化行为需要真机验收。
 - 日历为月视图；今日复盘、延期与 AI 建议可用，但完整的复盘历史筛选、AI 自动化权限开关、前置任务编辑、实际耗时计时和所有设置项仍可继续补齐。
 - 云端 debug APK 构建已在 GitHub Actions 成功运行；打开仓库的 Actions 页面下载 `cike-debug-apk` artifact。
-- 当前生成的是未签名 debug APK，适合测试安装；正式发布需要签名配置。
+- 发布包通过 GitHub Actions 签名并上传为 release artifact；应用商店上架还需自行完成商店资料和隐私/合规信息。
