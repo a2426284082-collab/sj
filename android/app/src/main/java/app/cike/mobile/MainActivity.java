@@ -84,6 +84,7 @@ public class MainActivity extends Activity {
         private final MainActivity activity;
         private final CikeDatabase database;
         NativeBridge(MainActivity activity) { this.activity = activity; this.database = new CikeDatabase(activity); }
+        @JavascriptInterface public void haptic() { activity.runOnUiThread(() -> activity.getWindow().getDecorView().performHapticFeedback(android.view.HapticFeedbackConstants.VIRTUAL_KEY)); }
         @JavascriptInterface public String loadState() {
             try { return database.readState(); } catch (Exception ex) { return ""; }
         }
