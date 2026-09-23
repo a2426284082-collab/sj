@@ -20,6 +20,13 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
+      - name: Sync current web interface into Android assets
+        run: |
+          cp app.js android/app/src/main/assets/web/app.js
+          cp index.html android/app/src/main/assets/web/index.html
+          cp style.css android/app/src/main/assets/web/style.css
+          cp manifest.webmanifest android/app/src/main/assets/web/manifest.webmanifest
+          cp sw.js android/app/src/main/assets/web/sw.js
       - name: Build debug APK
         run: gradle --no-daemon assembleDebug
         working-directory: android
