@@ -33,5 +33,5 @@ python -m http.server 8765
 
 - Android 使用本地 SQLite 快照表，PWA 预览版使用 IndexedDB；首次安装与 WebView 升级的持久化行为需要真机验收。
 - 日历为月视图；今日复盘、延期与 AI 建议可用，但完整的复盘历史筛选、AI 自动化权限开关、前置任务编辑、实际耗时计时和所有设置项仍可继续补齐。
-- 工作流尚未在云端运行：当前会话没有连接到 GitHub 仓库，因此还没有真实 APK 构建产物。需要把 `outputs/` 作为仓库根目录推送到你的 GitHub 仓库后运行 Actions。
+- 云端 debug APK 构建已在 GitHub Actions 成功运行；打开仓库的 Actions 页面下载 `cike-debug-apk` artifact。
 - 当前生成的是未签名 debug APK，适合测试安装；正式发布需要签名配置。
